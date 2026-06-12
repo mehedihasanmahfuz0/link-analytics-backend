@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client" // Prisma 7 uses this new provider
+  output   = "../src/generated/prisma" // We explicitly tell it to generate inside our src folder
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  links Link[]
+}
+
+model Link {
+  id          String   @id @default(uuid())
+  shortCode   String   @unique
+  originalUrl String
+  clickCount  Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
