@@ -6,7 +6,7 @@ WORKDIR /app
 
 # 3. Copy package files and install ALL dependencies (including devDeps for build)
 COPY package*.json ./
-RUN npm ci
+RUN npm install -g npm@11 && npm ci
 
 # 4. Copy source code
 COPY . .
@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 # Copy package files and install ONLY production dependencies
 COPY --from=builder /app/package*.json ./
-RUN npm ci --only=production
+RUN npm install -g npm@11 && npm ci --only=production
 # Copy Prisma schema for reference and generated client engine
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
