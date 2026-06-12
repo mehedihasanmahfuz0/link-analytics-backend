@@ -1,5 +1,5 @@
 # 1. Use a lightweight, secure Node.js base image
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 # 2. Set working directory
 WORKDIR /app
@@ -16,7 +16,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # 6. Production Stage (Multi-stage build keeps image small)
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
