@@ -2,7 +2,8 @@ import express, { Express } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler";
-import { env } from "./config/env"; // Import validated env
+import { env } from "./config/env";
+import { apiLimiter } from "./middlewares/rateLimiter";
 import linkRoutes from "./routes/linkRoutes";
 import authRoutes from "./routes/authRoutes";
 import redirectRoutes from "./routes/redirectRoutes";
@@ -25,8 +26,8 @@ app.use(
   }),
 );
 
-// 3. Body Parsing
-app.use(express.json());
+// 3. Body Parsing (with size limit to prevent memory exhaustion)
+app.use(express.json({ limit: "1mb" }));
 
 // 4. Health Check (Good for cloud provider uptime monitors)
 app.get("/api/v1/health", (req, res) => {
@@ -38,9 +39,9 @@ app.get("/api/v1/health", (req, res) => {
   });
 });
 
-// 5. Routes
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/links", linkRoutes);
+// 5. Rate Limiting (applied per-route group)
+app.use("/api/v1/auth", apiLimiter, authRoutes);
+app.use("/api/v1/links", apiLimiter, linkRoutes);
 app.use("/p", redirectRoutes);
 
 // 6. Global Error Handler (Must be last)

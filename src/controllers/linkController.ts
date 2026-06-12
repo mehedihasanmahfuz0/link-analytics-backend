@@ -14,13 +14,6 @@ export const linkController = {
 
       const { originalUrl } = req.body;
 
-      if (!originalUrl || typeof originalUrl !== "string") {
-        return res.status(400).json({
-          success: false,
-          message: "originalUrl is required and must be a string",
-        });
-      }
-
       const newLink = await linkService.createLink(userId, originalUrl);
 
       return res.status(201).json({
@@ -34,7 +27,7 @@ export const linkController = {
 
   getUserLinks: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = "temp-user-id";
+      const userId = req.user!.userId;
 
       const links = await linkService.getUserLinks(userId);
 

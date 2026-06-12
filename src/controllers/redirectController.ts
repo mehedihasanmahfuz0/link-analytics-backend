@@ -5,7 +5,7 @@ import { logger } from "../config/logger";
 export const redirectController = {
   handleRedirect: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let { shortCode } = req.params;
+      const { shortCode } = req.params;
 
       if (!shortCode) {
         return res.status(400).json({

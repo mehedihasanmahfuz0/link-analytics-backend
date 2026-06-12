@@ -6,7 +6,7 @@ const logger_1 = require("../config/logger");
 exports.redirectController = {
     handleRedirect: async (req, res, next) => {
         try {
-            let { shortCode } = req.params;
+            const { shortCode } = req.params;
             if (!shortCode) {
                 return res.status(400).json({
                     success: false,

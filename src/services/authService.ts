@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken";
 import { userRepository } from "../repositories/userRepository";
 import { logger } from "../config/logger";
 
-const JWT_SECRET =
-  process.env.JWT_SECRET || "super-secret-key-change-in-production";
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 export const authService = {
   register: async (email: string, password: string) => {

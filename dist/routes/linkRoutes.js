@@ -3,8 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const linkController_1 = require("../controllers/linkController");
 const authenticate_1 = require("../middlewares/authenticate");
+const validate_1 = require("../middlewares/validate");
+const linkValidator_1 = require("../validators/linkValidator");
+const rateLimiter_1 = require("../middlewares/rateLimiter");
 const router = (0, express_1.Router)();
-// The 'authenticate' middleware runs BEFORE the controller.
-router.post("/", authenticate_1.authenticate, linkController_1.linkController.createLink);
+router.post("/", authenticate_1.authenticate, rateLimiter_1.linkCreationLimiter, (0, validate_1.validate)(linkValidator_1.createLinkSchema), linkController_1.linkController.createLink);
 router.get("/", authenticate_1.authenticate, linkController_1.linkController.getUserLinks);
 exports.default = router;

@@ -8,7 +8,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userRepository_1 = require("../repositories/userRepository");
 const logger_1 = require("../config/logger");
-const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-change-in-production";
+const JWT_SECRET = process.env.JWT_SECRET;
 exports.authService = {
     register: async (email, password) => {
         // 1. Check if user already exists

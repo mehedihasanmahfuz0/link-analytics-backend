@@ -4,9 +4,9 @@ FROM node:20-alpine AS builder
 # 2. Set working directory
 WORKDIR /app
 
-# 3. Copy package files and install dependencies
+# 3. Copy package files and install ALL dependencies (including devDeps for build)
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 # 4. Copy source code
 COPY . .
@@ -20,11 +20,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy built files and production dependencies from builder
+# Copy compiled JS from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
+# Copy package files and install ONLY production dependencies
 COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production
+# Copy Prisma schema for reference and generated client engine
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # 7. Run as a non-root user for security
 RUN addgroup -g 1001 -S nodejs

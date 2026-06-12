@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticate = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-change-in-production";
+const JWT_SECRET = process.env.JWT_SECRET;
 const authenticate = (req, res, next) => {
     // 1. Get token from headers (Format: "Bearer <token>")
     const authHeader = req.headers.authorization;

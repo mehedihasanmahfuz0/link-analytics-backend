@@ -2,11 +2,11 @@ import { Router } from "express";
 import { authController } from "../controllers/authController";
 import { validate } from "../middlewares/validate";
 import { registerSchema, loginSchema } from "../validators/authValidator";
+import { authLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
 
-// Notice how we chain the validate middleware BEFORE the controller!
-router.post("/register", validate(registerSchema), authController.register);
-router.post("/login", validate(loginSchema), authController.login);
+router.post("/register", authLimiter, validate(registerSchema), authController.register);
+router.post("/login", authLimiter, validate(loginSchema), authController.login);
 
 export default router;
