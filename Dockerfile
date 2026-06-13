@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # 4. Install ALL dependencies (including devDependencies needed for building)
-RUN npm install -g npm@11 && npm ci
+RUN npm install -g npm@11 && npm install
 
 # 5. Copy source code
 COPY . .
