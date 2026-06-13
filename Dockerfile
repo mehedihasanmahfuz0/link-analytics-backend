@@ -16,9 +16,8 @@ RUN npm install -g npm@11 && npm install
 # 5. Copy source code
 COPY . .
 
-# 6. Generate Prisma client and build TypeScript
-RUN npx prisma generate
-RUN npm run build
+# 6. Build TypeScript (Prisma client is already pre-generated in source)
+RUN npx tsc
 
 # ==========================================
 # 7. Production Stage
