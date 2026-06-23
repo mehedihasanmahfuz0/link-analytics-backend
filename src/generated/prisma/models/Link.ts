@@ -241,6 +241,7 @@ export type LinkWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Link"> | Date | string
   userId?: Prisma.StringFilter<"Link"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  clickEvents?: Prisma.ClickEventListRelationFilter
 }
 
 export type LinkOrderByWithRelationInput = {
@@ -253,6 +254,7 @@ export type LinkOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  clickEvents?: Prisma.ClickEventOrderByRelationAggregateInput
 }
 
 export type LinkWhereUniqueInput = Prisma.AtLeast<{
@@ -268,6 +270,7 @@ export type LinkWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Link"> | Date | string
   userId?: Prisma.StringFilter<"Link"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  clickEvents?: Prisma.ClickEventListRelationFilter
 }, "id" | "shortCode">
 
 export type LinkOrderByWithAggregationInput = {
@@ -309,6 +312,7 @@ export type LinkCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutLinksInput
+  clickEvents?: Prisma.ClickEventCreateNestedManyWithoutLinkInput
 }
 
 export type LinkUncheckedCreateInput = {
@@ -320,6 +324,7 @@ export type LinkUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
+  clickEvents?: Prisma.ClickEventUncheckedCreateNestedManyWithoutLinkInput
 }
 
 export type LinkUpdateInput = {
@@ -331,6 +336,7 @@ export type LinkUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutLinksNestedInput
+  clickEvents?: Prisma.ClickEventUpdateManyWithoutLinkNestedInput
 }
 
 export type LinkUncheckedUpdateInput = {
@@ -342,6 +348,7 @@ export type LinkUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  clickEvents?: Prisma.ClickEventUncheckedUpdateManyWithoutLinkNestedInput
 }
 
 export type LinkCreateManyInput = {
@@ -427,6 +434,11 @@ export type LinkSumOrderByAggregateInput = {
   clickCount?: Prisma.SortOrder
 }
 
+export type LinkScalarRelationFilter = {
+  is?: Prisma.LinkWhereInput
+  isNot?: Prisma.LinkWhereInput
+}
+
 export type LinkCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.LinkCreateWithoutUserInput, Prisma.LinkUncheckedCreateWithoutUserInput> | Prisma.LinkCreateWithoutUserInput[] | Prisma.LinkUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.LinkCreateOrConnectWithoutUserInput | Prisma.LinkCreateOrConnectWithoutUserInput[]
@@ -481,6 +493,20 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type LinkCreateNestedOneWithoutClickEventsInput = {
+  create?: Prisma.XOR<Prisma.LinkCreateWithoutClickEventsInput, Prisma.LinkUncheckedCreateWithoutClickEventsInput>
+  connectOrCreate?: Prisma.LinkCreateOrConnectWithoutClickEventsInput
+  connect?: Prisma.LinkWhereUniqueInput
+}
+
+export type LinkUpdateOneRequiredWithoutClickEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.LinkCreateWithoutClickEventsInput, Prisma.LinkUncheckedCreateWithoutClickEventsInput>
+  connectOrCreate?: Prisma.LinkCreateOrConnectWithoutClickEventsInput
+  upsert?: Prisma.LinkUpsertWithoutClickEventsInput
+  connect?: Prisma.LinkWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LinkUpdateToOneWithWhereWithoutClickEventsInput, Prisma.LinkUpdateWithoutClickEventsInput>, Prisma.LinkUncheckedUpdateWithoutClickEventsInput>
+}
+
 export type LinkCreateWithoutUserInput = {
   id?: string
   shortCode: string
@@ -489,6 +515,7 @@ export type LinkCreateWithoutUserInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  clickEvents?: Prisma.ClickEventCreateNestedManyWithoutLinkInput
 }
 
 export type LinkUncheckedCreateWithoutUserInput = {
@@ -499,6 +526,7 @@ export type LinkUncheckedCreateWithoutUserInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  clickEvents?: Prisma.ClickEventUncheckedCreateNestedManyWithoutLinkInput
 }
 
 export type LinkCreateOrConnectWithoutUserInput = {
@@ -541,6 +569,66 @@ export type LinkScalarWhereInput = {
   userId?: Prisma.StringFilter<"Link"> | string
 }
 
+export type LinkCreateWithoutClickEventsInput = {
+  id?: string
+  shortCode: string
+  originalUrl: string
+  clickCount?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutLinksInput
+}
+
+export type LinkUncheckedCreateWithoutClickEventsInput = {
+  id?: string
+  shortCode: string
+  originalUrl: string
+  clickCount?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId: string
+}
+
+export type LinkCreateOrConnectWithoutClickEventsInput = {
+  where: Prisma.LinkWhereUniqueInput
+  create: Prisma.XOR<Prisma.LinkCreateWithoutClickEventsInput, Prisma.LinkUncheckedCreateWithoutClickEventsInput>
+}
+
+export type LinkUpsertWithoutClickEventsInput = {
+  update: Prisma.XOR<Prisma.LinkUpdateWithoutClickEventsInput, Prisma.LinkUncheckedUpdateWithoutClickEventsInput>
+  create: Prisma.XOR<Prisma.LinkCreateWithoutClickEventsInput, Prisma.LinkUncheckedCreateWithoutClickEventsInput>
+  where?: Prisma.LinkWhereInput
+}
+
+export type LinkUpdateToOneWithWhereWithoutClickEventsInput = {
+  where?: Prisma.LinkWhereInput
+  data: Prisma.XOR<Prisma.LinkUpdateWithoutClickEventsInput, Prisma.LinkUncheckedUpdateWithoutClickEventsInput>
+}
+
+export type LinkUpdateWithoutClickEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  shortCode?: Prisma.StringFieldUpdateOperationsInput | string
+  originalUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutLinksNestedInput
+}
+
+export type LinkUncheckedUpdateWithoutClickEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  shortCode?: Prisma.StringFieldUpdateOperationsInput | string
+  originalUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  clickCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type LinkCreateManyUserInput = {
   id?: string
   shortCode: string
@@ -559,6 +647,7 @@ export type LinkUpdateWithoutUserInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clickEvents?: Prisma.ClickEventUpdateManyWithoutLinkNestedInput
 }
 
 export type LinkUncheckedUpdateWithoutUserInput = {
@@ -569,6 +658,7 @@ export type LinkUncheckedUpdateWithoutUserInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clickEvents?: Prisma.ClickEventUncheckedUpdateManyWithoutLinkNestedInput
 }
 
 export type LinkUncheckedUpdateManyWithoutUserInput = {
@@ -582,6 +672,35 @@ export type LinkUncheckedUpdateManyWithoutUserInput = {
 }
 
 
+/**
+ * Count Type LinkCountOutputType
+ */
+
+export type LinkCountOutputType = {
+  clickEvents: number
+}
+
+export type LinkCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  clickEvents?: boolean | LinkCountOutputTypeCountClickEventsArgs
+}
+
+/**
+ * LinkCountOutputType without action
+ */
+export type LinkCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LinkCountOutputType
+   */
+  select?: Prisma.LinkCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * LinkCountOutputType without action
+ */
+export type LinkCountOutputTypeCountClickEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ClickEventWhereInput
+}
+
 
 export type LinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -593,6 +712,8 @@ export type LinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   userId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  clickEvents?: boolean | Prisma.Link$clickEventsArgs<ExtArgs>
+  _count?: boolean | Prisma.LinkCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["link"]>
 
 export type LinkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -633,6 +754,8 @@ export type LinkSelectScalar = {
 export type LinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "shortCode" | "originalUrl" | "clickCount" | "isActive" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["link"]>
 export type LinkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  clickEvents?: boolean | Prisma.Link$clickEventsArgs<ExtArgs>
+  _count?: boolean | Prisma.LinkCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LinkIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -645,6 +768,7 @@ export type $LinkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Link"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    clickEvents: Prisma.$ClickEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1050,6 +1174,7 @@ readonly fields: LinkFieldRefs;
 export interface Prisma__LinkClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  clickEvents<T extends Prisma.Link$clickEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Link$clickEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClickEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1485,6 +1610,30 @@ export type LinkDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Links to delete.
    */
   limit?: number
+}
+
+/**
+ * Link.clickEvents
+ */
+export type Link$clickEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClickEvent
+   */
+  select?: Prisma.ClickEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ClickEvent
+   */
+  omit?: Prisma.ClickEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClickEventInclude<ExtArgs> | null
+  where?: Prisma.ClickEventWhereInput
+  orderBy?: Prisma.ClickEventOrderByWithRelationInput | Prisma.ClickEventOrderByWithRelationInput[]
+  cursor?: Prisma.ClickEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ClickEventScalarFieldEnum | Prisma.ClickEventScalarFieldEnum[]
 }
 
 /**

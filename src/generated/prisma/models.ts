@@ -10,4 +10,5 @@
  */
 export type * from './models/User'
 export type * from './models/Link'
+export type * from './models/ClickEvent'
 export type * from './commonInputTypes'

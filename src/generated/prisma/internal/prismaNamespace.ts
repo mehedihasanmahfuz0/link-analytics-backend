@@ -385,7 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
-  Link: 'Link'
+  Link: 'Link',
+  ClickEvent: 'ClickEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "link"
+    modelProps: "user" | "link" | "clickEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -553,6 +554,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ClickEvent: {
+      payload: Prisma.$ClickEventPayload<ExtArgs>
+      fields: Prisma.ClickEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ClickEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ClickEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>
+        }
+        findFirst: {
+          args: Prisma.ClickEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ClickEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>
+        }
+        findMany: {
+          args: Prisma.ClickEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>[]
+        }
+        create: {
+          args: Prisma.ClickEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>
+        }
+        createMany: {
+          args: Prisma.ClickEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ClickEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>[]
+        }
+        delete: {
+          args: Prisma.ClickEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>
+        }
+        update: {
+          args: Prisma.ClickEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.ClickEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ClickEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ClickEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.ClickEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClickEventPayload>
+        }
+        aggregate: {
+          args: Prisma.ClickEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClickEvent>
+        }
+        groupBy: {
+          args: Prisma.ClickEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClickEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ClickEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClickEventCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -617,6 +692,25 @@ export const LinkScalarFieldEnum = {
 export type LinkScalarFieldEnum = (typeof LinkScalarFieldEnum)[keyof typeof LinkScalarFieldEnum]
 
 
+export const ClickEventScalarFieldEnum = {
+  id: 'id',
+  clickedAt: 'clickedAt',
+  deviceType: 'deviceType',
+  browser: 'browser',
+  os: 'os',
+  country: 'country',
+  city: 'city',
+  ipAddress: 'ipAddress',
+  referrer: 'referrer',
+  utmSource: 'utmSource',
+  utmMedium: 'utmMedium',
+  utmCampaign: 'utmCampaign',
+  linkId: 'linkId'
+} as const
+
+export type ClickEventScalarFieldEnum = (typeof ClickEventScalarFieldEnum)[keyof typeof ClickEventScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -631,6 +725,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -813,6 +915,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   link?: Prisma.LinkOmit
+  clickEvent?: Prisma.ClickEventOmit
 }
 
 /* Types for Logging */

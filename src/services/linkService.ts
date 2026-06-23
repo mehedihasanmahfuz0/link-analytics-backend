@@ -1,103 +1,73 @@
-import { linkRepository } from "../repositories/linkRepository";
-import { analyticsQueue } from "../config/queue";
-import { redis } from "../config/redis";
-import { Link } from "../generated/prisma/client";
-import { logger } from "../config/logger";
+import { linkRepository } from '../repositories/linkRepository';
+import { analyticsQueue } from '../config/queue';
+import { redis } from '../config/redis';
+import { Link } from '../generated/prisma/client';
+import { logger } from '../config/logger';
 
-const CACHE_TTL = 3600; // 1 hour
+const CACHE_TTL = 3600; // Cache links for 1 hour (in seconds)
 
 export const linkService = {
-  // 1. CREATE LINK (cache warm + collision-safe shortCode)
+  // 1. CREATE LINK (Also cache it immediately for faster first reads)
   createLink: async (userId: string, originalUrl: string): Promise<Link> => {
     let shortCode: string;
     let existing;
 
-    // Avoid collisions
     do {
       shortCode = Math.random().toString(36).substring(2, 8);
       existing = await linkRepository.findByShortCode(shortCode);
     } while (existing);
-
-    const newLink = await linkRepository.create({
-      shortCode,
-      originalUrl,
-      userId,
-    });
-
-    // Cache warm (Redis SET with TTL)
-    await redis.set(
-      `link:${shortCode}`,
-      JSON.stringify(newLink),
-      "EX",
-      CACHE_TTL,
-    );
-
-    logger.info({ linkId: newLink.id }, "Service: Link created and cached");
-
+    
+    const newLink = await linkRepository.create({ shortCode, originalUrl, userId });
+    
+    // Pro move: Pre-warm the cache so the first visitor gets a fast redirect
+    await redis.setex(`link:${shortCode}`, CACHE_TTL, JSON.stringify(newLink));
+    logger.info({ linkId: newLink.id }, 'Service: Link created and cached');
+    
     return newLink;
   },
 
-  // 2. GET LINK FOR REDIRECT (Cache-Aside Pattern)
+  // 2. GET LINK FOR REDIRECT (The "Cache-Aside" Pattern)
   getLinkForRedirect: async (shortCode: string): Promise<Link | null> => {
-    // Step A: Check Redis cache
+    // Step A: Check Redis first (Lightning fast: ~1ms)
     const cachedLink = await redis.get(`link:${shortCode}`);
-
     if (cachedLink) {
-      try {
-        logger.info(
-          { shortCode, source: "cache" },
-          "Service: Link fetched from cache",
-        );
-        return JSON.parse(cachedLink) as Link;
-      } catch (err) {
-        logger.error(
-          { err, shortCode },
-          "Cache parse failed, falling back to DB",
-        );
-      }
+      logger.info({ shortCode, source: 'cache' }, 'Service: Link fetched from cache');
+      return JSON.parse(cachedLink) as Link;
     }
 
-    // Step B: DB fallback
+    // Step B: Cache miss. Check Database (Slower: ~10-50ms)
     const dbLink = await linkRepository.findByShortCode(shortCode);
-
+    
     if (dbLink) {
-      // Step C: re-cache for next requests
-      await redis.set(
-        `link:${shortCode}`,
-        JSON.stringify(dbLink),
-        "EX",
-        CACHE_TTL,
-      );
-
-      logger.info(
-        { shortCode, source: "database" },
-        "Service: Link fetched from DB and cached",
-      );
+      // Step C: Save to Redis for next time
+      await redis.setex(`link:${shortCode}`, CACHE_TTL, JSON.stringify(dbLink));
+      logger.info({ shortCode, source: 'database' }, 'Service: Link fetched from DB and cached');
     }
 
     return dbLink;
   },
 
-  // 3. RECORD CLICK (async queue)
-  recordClick: async (shortCode: string): Promise<void> => {
-    await analyticsQueue.add(
-      "record-click",
-      { shortCode },
-      {
-        attempts: 3,
-        backoff: {
-          type: "exponential",
-          delay: 2000,
-        },
-        removeOnComplete: true,
-        removeOnFail: false,
-      },
-    );
-
-    logger.info({ shortCode }, "Service: Click event pushed to queue");
+  // 3. RECORD CLICK (Asynchronous via Queue) - UPDATED WITH ANALYTICS
+  recordClick: async (shortCode: string, analyticsData: {
+    deviceType: string;
+    browser: string;
+    os: string;
+    country: string | null;
+    city: string | null;
+    ipAddress: string;
+    referrer: string;
+    utmSource: string | null;
+    utmMedium: string | null;
+    utmCampaign: string | null;
+  }): Promise<void> => {
+    // We DO NOT update the database here. We just push a message to the queue.
+    await analyticsQueue.add('record-click', { 
+      shortCode,
+      analyticsData 
+    });
+    logger.info({ shortCode, device: analyticsData.deviceType }, 'Service: Click event pushed to queue');
   },
 
-  // 4. GET USER LINKS
   getUserLinks: async (userId: string): Promise<Link[]> => {
     return linkRepository.findByUserId(userId);
   },
