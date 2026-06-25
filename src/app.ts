@@ -17,7 +17,7 @@ const app: Express = express();
 app.use(helmet());
 
 const allowedOrigins = env.NODE_ENV === 'production' 
-  ? ['https://your-frontend-domain.com']
+  ? ['https://your-frontend-domain.com', 'https://url-analytics-beryl.vercel.app']
   : ['http://localhost:3000', 'http://localhost:5173'];
 
 app.use(cors({
